@@ -1,7 +1,7 @@
-local _2afile_2a = "fnl/conjure/client/janet/netrepl.fnl"
+local _2afile_2a = "fnl/conjure/client/lisp/swank.fnl"
 local _1_
 do
-  local name_4_auto = "conjure.client.janet.netrepl"
+  local name_4_auto = "conjure.client.lisp.swank"
   local module_5_auto
   do
     local x_6_auto = _G.package.loaded[name_4_auto]
@@ -25,11 +25,11 @@ autoload = _3_
 local function _6_(...)
   local ok_3f_21_auto, val_22_auto = nil, nil
   local function _5_()
-    return {autoload("conjure.aniseed.core"), autoload("conjure.bridge"), autoload("conjure.client"), autoload("conjure.config"), autoload("conjure.log"), autoload("conjure.mapping"), autoload("conjure.aniseed.nvim"), autoload("conjure.remote.netrepl"), autoload("conjure.text")}
+    return {autoload("conjure.aniseed.core"), autoload("conjure.bridge"), autoload("conjure.client"), autoload("conjure.config"), autoload("conjure.log"), autoload("conjure.mapping"), autoload("conjure.aniseed.nvim"), autoload("conjure.remote.swank"), autoload("conjure.text")}
   end
   ok_3f_21_auto, val_22_auto = pcall(_5_)
   if ok_3f_21_auto then
-    _1_["aniseed/local-fns"] = {autoload = {a = "conjure.aniseed.core", bridge = "conjure.bridge", client = "conjure.client", config = "conjure.config", log = "conjure.log", mapping = "conjure.mapping", nvim = "conjure.aniseed.nvim", remote = "conjure.remote.netrepl", text = "conjure.text"}}
+    _1_["aniseed/local-fns"] = {autoload = {a = "conjure.aniseed.core", bridge = "conjure.bridge", client = "conjure.client", config = "conjure.config", log = "conjure.log", mapping = "conjure.mapping", nvim = "conjure.aniseed.nvim", remote = "conjure.remote.swank", text = "conjure.text"}}
     return val_22_auto
   else
     return print(val_22_auto)
@@ -46,13 +46,13 @@ local nvim = _local_4_[7]
 local remote = _local_4_[8]
 local text = _local_4_[9]
 local _2amodule_2a = _1_
-local _2amodule_name_2a = "conjure.client.janet.netrepl"
+local _2amodule_name_2a = "conjure.client.lisp.swank"
 do local _ = ({nil, _1_, nil, {{}, nil, nil, nil}})[2] end
 local buf_suffix
 do
   local v_23_auto
   do
-    local v_25_auto = ".janet"
+    local v_25_auto = ".lisp"
     _1_["buf-suffix"] = v_25_auto
     v_23_auto = v_25_auto
   end
@@ -64,7 +64,7 @@ local comment_prefix
 do
   local v_23_auto
   do
-    local v_25_auto = "# "
+    local v_25_auto = "; "
     _1_["comment-prefix"] = v_25_auto
     v_23_auto = v_25_auto
   end
@@ -72,7 +72,7 @@ do
   t_24_auto["comment-prefix"] = v_23_auto
   comment_prefix = v_23_auto
 end
-config.merge({client = {janet = {netrepl = {connection = {default_host = "127.0.0.1", default_port = "9365"}, mapping = {connect = "cc", disconnect = "cd"}}}}})
+config.merge({client = {lisp = {swank = {connection = {default_host = "127.0.0.1", default_port = "7002"}, mapping = {connect = "cc", disconnect = "cd"}}}}})
 local state
 do
   local v_23_auto
@@ -171,8 +171,8 @@ do
     local v_25_auto
     local function connect0(opts)
       local opts0 = (opts or {})
-      local host = (opts0.host or config["get-in"]({"client", "janet", "netrepl", "connection", "default_host"}))
-      local port = (opts0.port or config["get-in"]({"client", "janet", "netrepl", "connection", "default_port"}))
+      local host = (opts0.host or config["get-in"]({"client", "lisp", "swank", "connection", "default_host"}))
+      local port = (opts0.port or config["get-in"]({"client", "lisp", "swank", "connection", "default_port"}))
       if state("conn") then
         disconnect()
       end
@@ -282,8 +282,8 @@ do
   do
     local v_25_auto
     local function on_filetype0()
-      mapping.buf("n", "JanetDisconnect", config["get-in"]({"client", "janet", "netrepl", "mapping", "disconnect"}), "conjure.client.janet.netrepl", "disconnect")
-      return mapping.buf("n", "JanetConnect", config["get-in"]({"client", "janet", "netrepl", "mapping", "connect"}), "conjure.client.janet.netrepl", "connect")
+      mapping.buf("n", "LispDisconnect", config["get-in"]({"client", "lisp", "swank", "mapping", "disconnect"}), "conjure.client.lisp.swank", "disconnect")
+      return mapping.buf("n", "LispConnect", config["get-in"]({"client", "lisp", "swank", "mapping", "connect"}), "conjure.client.lisp.swank", "connect")
     end
     v_25_auto = on_filetype0
     _1_["on-filetype"] = v_25_auto
