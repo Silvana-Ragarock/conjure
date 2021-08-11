@@ -47,13 +47,14 @@
     nil))
 
 (merge
-  {:debug false
+  {:debug true
    :relative_file_root nil
    :path_subs nil
 
-   :filetypes [:clojure :fennel :janet :hy :racket :scheme]
+   :filetypes [:clojure :fennel :lisp :janet :hy :racket :scheme]
    :filetype {:clojure :conjure.client.clojure.nrepl
               :fennel :conjure.client.fennel.aniseed
+              :lisp :conjure.client.lisp.swank
               :janet :conjure.client.janet.netrepl
               :hy :conjure.client.hy.stdio
               :racket :conjure.client.racket.stdio
