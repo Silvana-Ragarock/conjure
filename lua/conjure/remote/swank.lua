@@ -25,11 +25,11 @@ autoload = _3_
 local function _6_(...)
   local ok_3f_21_auto, val_22_auto = nil, nil
   local function _5_()
-    return {autoload("conjure.aniseed.core"), autoload("conjure.client"), autoload("conjure.log"), autoload("conjure.net")}
+    return {autoload("conjure.aniseed.core"), autoload("conjure.client"), autoload("conjure.log"), autoload("conjure.net"), autoload("conjure.aniseed.string"), autoload("conjure.text")}
   end
   ok_3f_21_auto, val_22_auto = pcall(_5_)
   if ok_3f_21_auto then
-    _1_["aniseed/local-fns"] = {autoload = {a = "conjure.aniseed.core", client = "conjure.client", log = "conjure.log", net = "conjure.net"}}
+    _1_["aniseed/local-fns"] = {autoload = {a = "conjure.aniseed.core", client = "conjure.client", log = "conjure.log", net = "conjure.net", str = "conjure.aniseed.string", text = "conjure.text"}}
     return val_22_auto
   else
     return print(val_22_auto)
@@ -40,6 +40,8 @@ local a = _local_4_[1]
 local client = _local_4_[2]
 local log = _local_4_[3]
 local net = _local_4_[4]
+local str = _local_4_[5]
+local text = _local_4_[6]
 local _2amodule_2a = _1_
 local _2amodule_name_2a = "conjure.remote.swank"
 do local _ = ({nil, _1_, nil, {{}, nil, nil, nil}})[2] end
@@ -57,8 +59,8 @@ end
 local decode_integer
 do
   local v_23_auto
-  local function decode_integer0(str)
-    return string.tonumber(str, 16)
+  local function decode_integer0(str0)
+    return tonumber(str0, 16)
   end
   v_23_auto = decode_integer0
   local t_24_auto = (_1_)["aniseed/locals"]
@@ -77,14 +79,82 @@ do
   t_24_auto["write-message-to-socket"] = v_23_auto
   write_message_to_socket = v_23_auto
 end
+local presentation_start
+do
+  local v_23_auto
+  do
+    local v_25_auto
+    local function presentation_start0(msg)
+      return log.dbg(msg)
+    end
+    v_25_auto = presentation_start0
+    _1_["presentation-start"] = v_25_auto
+    v_23_auto = v_25_auto
+  end
+  local t_24_auto = (_1_)["aniseed/locals"]
+  t_24_auto["presentation-start"] = v_23_auto
+  presentation_start = v_23_auto
+end
+local write_string
+do
+  local v_23_auto
+  do
+    local v_25_auto
+    local function write_string0(msg)
+      local m = str.split(msg, "\"")
+      return log.dbg(m[2])
+    end
+    v_25_auto = write_string0
+    _1_["write-string"] = v_25_auto
+    v_23_auto = v_25_auto
+  end
+  local t_24_auto = (_1_)["aniseed/locals"]
+  t_24_auto["write-string"] = v_23_auto
+  write_string = v_23_auto
+end
+__fnl_global__fn_2dtable = {[":presentation-start"] = presentation_start, [":write-string"] = write_string}
+local decode_cmd
+do
+  local v_23_auto
+  do
+    local v_25_auto
+    local function decode_cmd0(cmd)
+      log.dbg(cmd)
+      local name = string.sub(cmd, string.find(cmd, "%S+", 2))
+      local f
+      do
+        local t_8_ = __fnl_global__fn_2dtable
+        if (nil ~= t_8_) then
+          t_8_ = (t_8_)[name]
+        end
+        f = t_8_
+      end
+      if f then
+        return f(cmd)
+      else
+        return log.dbg(("function: '" .. name .. "' not implemented yet!"))
+      end
+    end
+    v_25_auto = decode_cmd0
+    _1_["decode-cmd"] = v_25_auto
+    v_23_auto = v_25_auto
+  end
+  local t_24_auto = (_1_)["aniseed/locals"]
+  t_24_auto["decode-cmd"] = v_23_auto
+  decode_cmd = v_23_auto
+end
 local decode
 do
   local v_23_auto
   do
     local v_25_auto
-    local function decode0(chunk)
-      log.dbg(chunk)
-      return chunk
+    local function decode0(msg, pos)
+      local len = decode_integer(string.sub(msg, (pos + 1), (pos + 6)))
+      if len then
+        decode_cmd(string.sub(msg, (pos + 7), (pos + 6 + len)))
+        decode0(msg, (pos + 6 + len))
+      end
+      return msg
     end
     v_25_auto = decode0
     _1_["decode"] = v_25_auto
@@ -94,6 +164,7 @@ do
   t_24_auto["decode"] = v_23_auto
   decode = v_23_auto
 end
+write_string("00002b(:write-string \"Hello, world\" :repl-result)", 0)
 local connect
 do
   local v_23_auto
@@ -105,10 +176,10 @@ do
         if (err or not chunk) then
           return opts["on-error"](err)
         else
-          return decode(chunk)
+          return decode(chunk, 0)
         end
       end
-      local function _9_(err)
+      local function _13_(err)
         if err then
           log.dbg("failure")
           return opts["on-failure"](err)
@@ -118,7 +189,7 @@ do
           return opts["on-success"]()
         end
       end
-      conn = a.merge(conn, net.connect({cb = client["schedule-wrap"](_9_), host = opts.host, port = opts.port}))
+      conn = a.merge(conn, net.connect({cb = client["schedule-wrap"](_13_), host = opts.host, port = opts.port}))
       return conn
     end
     v_25_auto = connect0
@@ -128,22 +199,6 @@ do
   local t_24_auto = (_1_)["aniseed/locals"]
   t_24_auto["connect"] = v_23_auto
   connect = v_23_auto
-end
-local call_back
-do
-  local v_23_auto
-  do
-    local v_25_auto
-    local function call_back0(t)
-      return log.dbg(("CALLBACK: " .. t))
-    end
-    v_25_auto = call_back0
-    _1_["call-back"] = v_25_auto
-    v_23_auto = v_25_auto
-  end
-  local t_24_auto = (_1_)["aniseed/locals"]
-  t_24_auto["call-back"] = v_23_auto
-  call_back = v_23_auto
 end
 local add_hex_code
 do
@@ -161,7 +216,7 @@ local encode
 do
   local v_23_auto
   local function encode0(msg, pkg)
-    return string.format("(:emacs-rex (swank-repl:listener-eval \"%s\") \"%s\" t 1)", msg, pkg)
+    return string.format("(:emacs-rex (swank-repl:listener-eval \"%s\") \"%s\" t 1)", string.gsub(msg, "\"", "\\\""), pkg)
   end
   v_23_auto = encode0
   local t_24_auto = (_1_)["aniseed/locals"]
@@ -174,7 +229,7 @@ do
   local function send_encoded0(conn, msg, cb)
     log.dbg("send", msg)
     table.insert(conn.queue, 1, (cb or false))
-    do end (conn.sock):write(add_hex_code(msg))
+    do end (conn.sock):write((encode_integer(#msg) .. msg))
     return nil
   end
   v_23_auto = send_encoded0
@@ -198,4 +253,32 @@ do
   t_24_auto["send"] = v_23_auto
   send = v_23_auto
 end
-return nil
+local c
+do
+  local v_23_auto
+  do
+    local v_25_auto
+    local function _15_(err)
+      return log.bg("error: ")
+    end
+    local function _16_(err)
+      return log.dbg("failure: ")
+    end
+    local function _17_()
+      return log.dbg("Yay!")
+    end
+    v_25_auto = connect({["on-error"] = _15_, ["on-failure"] = _16_, ["on-success"] = _17_, host = "127.0.0.1", name = "STUMPWM", port = "5001"})
+    do end (_1_)["c"] = v_25_auto
+    v_23_auto = v_25_auto
+  end
+  local t_24_auto = (_1_)["aniseed/locals"]
+  t_24_auto["c"] = v_23_auto
+  c = v_23_auto
+end
+local function _18_(msg)
+  local clean = text["trim-last-newline"](msg)
+  return log.append(text["split-lines"](clean))
+end
+send(c, "(notify-send \"i\")", _18_)
+send(c, "(* 5 3)", log.dbg)
+return c.destroy()
