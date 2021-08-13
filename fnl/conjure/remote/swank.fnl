@@ -118,16 +118,16 @@
   (send-encoded conn (encode msg conn.name) cb))
 
 ;; Example:
-(def c (connect
-         {:host "127.0.0.1"
-          :port "5001"
-          :name "STUMPWM"
-          :on-failure (fn [err] (log.dbg "failure: "))
-          :on-success (fn [] (log.dbg "Yay!"))
-          :on-error (fn [err] (log.bg "error: "))}))
-(send c "(notify-send \"i\")"
-      (fn [msg]
-        (let [clean (text.trim-last-newline msg)]
-          (log.append (text.split-lines clean)))))
-(send c "(* 5 3)" log.dbg)
-(c.destroy)
+;(def c (connect
+;         {:host "127.0.0.1"
+;          :port "5001"
+;          :name "STUMPWM"
+;          :on-failure (fn [err] (log.dbg "failure: "))
+;          :on-success (fn [] (log.dbg "Yay!"))
+;          :on-error (fn [err] (log.bg "error: "))}))
+;(send c "(print \"i\")"
+;      (fn [msg]
+;        (let [clean (text.trim-last-newline msg)]
+;          (log.append (text.split-lines clean)))))
+;(send c "(* 5 3)" log.dbg)
+;(c.destroy)

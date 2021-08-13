@@ -253,32 +253,4 @@ do
   t_24_auto["send"] = v_23_auto
   send = v_23_auto
 end
-local c
-do
-  local v_23_auto
-  do
-    local v_25_auto
-    local function _15_(err)
-      return log.bg("error: ")
-    end
-    local function _16_(err)
-      return log.dbg("failure: ")
-    end
-    local function _17_()
-      return log.dbg("Yay!")
-    end
-    v_25_auto = connect({["on-error"] = _15_, ["on-failure"] = _16_, ["on-success"] = _17_, host = "127.0.0.1", name = "STUMPWM", port = "5001"})
-    do end (_1_)["c"] = v_25_auto
-    v_23_auto = v_25_auto
-  end
-  local t_24_auto = (_1_)["aniseed/locals"]
-  t_24_auto["c"] = v_23_auto
-  c = v_23_auto
-end
-local function _18_(msg)
-  local clean = text["trim-last-newline"](msg)
-  return log.append(text["split-lines"](clean))
-end
-send(c, "(notify-send \"i\")", _18_)
-send(c, "(* 5 3)", log.dbg)
-return c.destroy()
+return nil
